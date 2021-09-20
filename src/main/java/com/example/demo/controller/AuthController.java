@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.ChangeAvatar;
-import com.example.demo.dto.request.ChangePasswordForm;
-import com.example.demo.dto.request.SignInForm;
-import com.example.demo.dto.request.SignUpForm;
+import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.JwtResponse;
 import com.example.demo.dto.response.ResponMessage;
 import com.example.demo.model.Role;
@@ -127,6 +124,28 @@ public class AuthController {
             return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
         } catch (UsernameNotFoundException exception){
             return new ResponseEntity<>(new ResponMessage(exception.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/change-profile")
+    public ResponseEntity<?> changeProfile(HttpServletRequest request, @Valid @RequestBody ChangeProfileForm changeProfileForm){
+        String jwt = jwtTokenFilter.getJwt(request);
+        String username = jwtProvider.getUerNameFromToken(jwt);
+        User user;
+        try {
+            if(userService.existsByUsername(changeProfileForm.getUsername())){
+                return new ResponseEntity<>(new ResponMessage("nouser"), HttpStatus.OK);
+            }
+            if(userService.existsByEmail(changeProfileForm.getEmail())){
+                return new ResponseEntity<>(new ResponMessage("noemail"), HttpStatus.OK);
+            }
+            user = userService.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("User Not Found with -> useranme"+username));
+            user.setName(changeProfileForm.getName());
+            user.setUsername(changeProfileForm.getUsername());
+            user.setEmail(changeProfileForm.getEmail());
+            userService.save(user);
+            return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+        } catch (UsernameNotFoundException exception){
+            return new ResponseEntity<>(new ResponMessage(exception.getMessage()),HttpStatus.NOT_FOUND );
         }
     }
 }
