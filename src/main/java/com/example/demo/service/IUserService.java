@@ -13,4 +13,5 @@ public interface IUserService {
     User save(User user);
     Page<User> findAll(Pageable pageable); //Page User
     Optional<User> findById(Long id); //Detail 1 User theo ID
+    void deleteById(Long id);
 }
