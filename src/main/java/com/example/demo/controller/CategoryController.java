@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.util.resources.cldr.ext.TimeZoneNames_fr_CA;
 
 import java.util.Optional;
 
@@ -56,4 +57,23 @@ public class CategoryController {
         categoryService.deleteById(category.get().getId());
         return new ResponseEntity<>(new ResponMessage("Delete Success!"), HttpStatus.OK);
     }
+    //Cach 1: Dung @PathVariable
+    @GetMapping("/search/{nameCategory}")
+    public ResponseEntity<?> searchByNameCategory(@PathVariable String nameCategory, @PageableDefault(sort = "nameCategory", direction = Sort.Direction.ASC)Pageable pageable){
+        Page<Category> categoryPage = categoryService.findByNameCategoryQuery(nameCategory, pageable);
+        if(categoryPage.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(categoryPage, HttpStatus.OK);
+    }
+
+//Cach 2: Dung @Requesparam
+//    @GetMapping("/search")
+//    public ResponseEntity<?> searchByNameCategory(@RequestParam("nameCategory") String search, @PageableDefault(sort = "nameCategory", direction = Sort.Direction.ASC)Pageable pageable){
+//        Page<Category> categoryPage = categoryService.findByNameCategoryQuery(search,pageable);
+//        if(categoryPage.isEmpty()){
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(categoryPage, HttpStatus.OK);
+//    }
 }
