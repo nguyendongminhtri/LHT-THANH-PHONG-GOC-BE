@@ -66,7 +66,33 @@ public class CategoryController {
         }
         return new ResponseEntity<>(categoryPage, HttpStatus.OK);
     }
-
+@GetMapping("/{id}")
+    public ResponseEntity<?> detailCategory(@PathVariable Long id){
+        Optional<Category> category = categoryService.findById(id);
+        if(!category.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(category, HttpStatus.OK);
+}
+@PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category){
+    Optional<Category> category1 = categoryService.findById(id);
+    if(!category1.isPresent()){
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    if(categoryService.existsByNameCategory(category.getNameCategory())){
+        if(!category.getAvatarCategory().equals(category1.get().getAvatarCategory())){
+            category1.get().setAvatarCategory(category.getAvatarCategory());
+            categoryService.save(category1.get());
+            return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponMessage("no_name_category"), HttpStatus.OK);
+    }
+    category1.get().setNameCategory(category.getNameCategory());
+    category1.get().setAvatarCategory(category.getAvatarCategory());
+    categoryService.save(category1.get());
+    return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+}
 //Cach 2: Dung @Requesparam
 //    @GetMapping("/search")
 //    public ResponseEntity<?> searchByNameCategory(@RequestParam("nameCategory") String search, @PageableDefault(sort = "nameCategory", direction = Sort.Direction.ASC)Pageable pageable){
