@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ICategoryService {
+    List<Category> findAll();
     Page<Category> findAll(Pageable pageable);
     Category save(Category category);
     Boolean existsByNameCategory(String nameCategory);

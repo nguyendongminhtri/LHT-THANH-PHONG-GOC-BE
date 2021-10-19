@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sun.util.resources.cldr.ext.TimeZoneNames_fr_CA;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -102,4 +103,12 @@ public class CategoryController {
 //        }
 //        return new ResponseEntity<>(categoryPage, HttpStatus.OK);
 //    }
+    @GetMapping("/list")
+    public ResponseEntity<?> getListCategory(){
+        List<Category> categoryList = categoryService.findAll();
+        if(categoryList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(categoryList, HttpStatus.OK);
+    }
 }
