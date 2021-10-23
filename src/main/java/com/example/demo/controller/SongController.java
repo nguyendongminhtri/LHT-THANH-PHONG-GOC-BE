@@ -31,6 +31,9 @@ public class SongController {
         if(song.getAvatarSong()==null){
             return new ResponseEntity<>(new ResponMessage("no_avatar_song"), HttpStatus.OK);
         }
+        if(song.getCategory()==null){
+            return new ResponseEntity<>(new ResponMessage("no_category"), HttpStatus.OK);
+        }
         if(song.getMp3Url()==null){
             return new ResponseEntity<>(new ResponMessage("no_mp3_song"), HttpStatus.OK);
         }
