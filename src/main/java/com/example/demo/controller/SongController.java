@@ -37,7 +37,16 @@ public class SongController {
         if(song.getMp3Url()==null){
             return new ResponseEntity<>(new ResponMessage("no_mp3_song"), HttpStatus.OK);
         }
-        songService.save(song);
-        return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+        if(song.getSingerList().size()==0){
+            if(song.getBandList().size()==0){
+                return new ResponseEntity<>(new ResponMessage("no_band_or_singer"), HttpStatus.OK);
+            } else {
+                songService.save(song);
+                return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+            }
+        } else {
+            songService.save(song);
+            return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+        }
     }
 }
